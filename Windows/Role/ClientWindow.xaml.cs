@@ -19,9 +19,23 @@ namespace WpfApp.Windows
     /// </summary>
     public partial class ClientWindow : Window
     {
-        public ClientWindow()
+        public Models.User? user { get; set; }
+
+        public ClientWindow(Models.User? user)
         {
             InitializeComponent();
+            this.user = user;
+            DataContext = this;
+        }
+
+        private void showItemsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            App.openWindow(this, new ProductsWindow(user));
+        }
+
+        private void showOrdersBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

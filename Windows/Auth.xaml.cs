@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,12 +23,16 @@ namespace WpfApp.Windows
     {
         int failed;
         DateTime lockedUntil;
+        Context context;
         
         public Auth()
         {
             InitializeComponent();
             passwordInputShow();
             failed = 0;
+            context = new Context();
+            context.Roles.Load();
+            context.Users.Load();
         }
 
         private void passwordTB_TextChanged(object sender, TextChangedEventArgs e)
@@ -81,15 +86,26 @@ namespace WpfApp.Windows
                 return;
             }
             string login = loginTB.Text, password = passwordTB.Text;
-            Action authRequestAction = () => {
+            Action authRequestAction = () =>
+            {
                 // check auth request
-                bool request = authRequest(login, password);
-                if (!request)
+                Models.User user = authUserRequest(login, password);
+                if (user == null)
                 {
                     failed++;
+                    MessageBox.Show("Некорректные данные");
                     return;
                 }
-                
+                failed = 0;
+                if (user.Role.RoleName == "Администратор"
+                    || user.Role.RoleName == "Менеджер")
+                {
+                    App.openWindow(this, new AdminWindow(user));
+                }
+                else if(user.Role.RoleName == "Клиент")
+                {
+                    App.openWindow(this, new ClientWindow(user));
+                }
             };
             Action capchaFailAction = () =>
             {
@@ -102,7 +118,7 @@ namespace WpfApp.Windows
                 MessageBox.Show($"Попробуйте еще раз через {lockedUntil.Second - DateTime.Now.Second} секунд!");
                 return;
             }
-            if (failed > 1)
+            if (failed >= 1)
             {
                 Window w;
                 w = new CapchaWindow(authRequestAction, capchaFailAction);
@@ -111,14 +127,24 @@ namespace WpfApp.Windows
             else
             {
                 authRequestAction();
-                failed = 0;
             }
         }
         private bool authRequest(string login, string password)
         {
-            if (login == "admin")
+            Models.User user = context.Users.First(u=>u.UserLogin==login);
+            if (user != null && user.UserPassword == password)
                 return true;
             return false;
+        }
+        private Models.User? authUserRequest(string login, string password)
+        {
+            var list = context.Users.ToList();
+            Models.User? user = context.Users.FirstOrDefault(u => u.UserLogin == login);
+            if (user == null)
+                return null;
+            if (user.UserPassword == password)
+                return user;
+            return null;
         }
         private void entryGuestButton_Click(object sender, RoutedEventArgs e)
         {

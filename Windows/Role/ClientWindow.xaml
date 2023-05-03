@@ -6,7 +6,44 @@
         xmlns:local="clr-namespace:WpfApp.Windows"
         mc:Ignorable="d"
         Title="ClientWindow" Height="450" Width="800">
-    <Grid>
-        
+    <Grid Style="{StaticResource MainStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel
+            Grid.ColumnSpan="2">
+            <TextBlock
+                Text="{Binding user.UserSurname}">
+            </TextBlock>
+            <TextBlock
+                Text="{Binding user.UserName}">
+            </TextBlock>
+            <TextBlock
+                Text="{Binding user.UserPatronymic}">
+            </TextBlock>
+        </StackPanel>
+        <ScrollViewer
+            Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"
+            HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Button x:Name="showItemsBtn"
+                        Click="showItemsBtn_Click"
+                        Style="{StaticResource DashboardBtn}">
+                    Посмотреть товары
+                </Button>
+                <Button x:Name="showOrdersBtn"
+                        Click="showOrdersBtn_Click"
+                        Style="{StaticResource DashboardBtn}">
+                    Посмотреть Заказы
+                </Button>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

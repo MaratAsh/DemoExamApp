@@ -47,13 +47,13 @@ namespace WpfApp.Windows
         private void generate()
         {
             MyCaptcha.CreateCaptcha(Captcha.LetterOption.Alphanumeric, 5);
-            current = MyCaptcha.CaptchaText;
+            capcha.Text = MyCaptcha.CaptchaText;
             capchaInput.Text = "";
         }
 
         private void enterBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (capchaInput.Text == current)
+            if (capchaInput.Text == MyCaptcha.CaptchaText)
             {
                 Close();
                 onConfirmation();

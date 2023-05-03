@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,16 +16,21 @@ using System.Windows.Shapes;
 namespace WpfApp.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для AdminWindow.xaml
+    /// Логика взаимодействия для ProductsWindow.xaml
     /// </summary>
-    public partial class AdminWindow : Window
+    public partial class ProductsWindow : Window
     {
         Models.User? user;
-        public AdminWindow(Models.User? user)
+        Context context;
+        public List<Models.Product> products { get; set; }
+        public ProductsWindow(Models.User? user)
         {
             InitializeComponent();
-            this.user = user;
             DataContext = this;
+            this.user = user;
+            context = new Context();
+            context.Products.Load();
+            products = context.Products.ToList();
         }
     }
 }

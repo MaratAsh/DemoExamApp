@@ -13,5 +13,14 @@ namespace WpfApp
     /// </summary>
     public partial class App : Application
     {
+        public static void openWindow(Window parent, Window w)
+        {
+            parent.Visibility = Visibility.Hidden;
+            w.Closed += (o, e) =>
+            {
+                parent.Visibility = Visibility.Visible;
+            };
+            w.Show();
+        }
     }
 }

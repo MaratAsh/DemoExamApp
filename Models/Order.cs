@@ -8,5 +8,6 @@ namespace WpfApp.Models
 {
     public partial class Order
     {
+        public int OrderId { get; set; }
     }
 }

@@ -7,7 +7,6 @@
         xmlns:local="clr-namespace:WpfApp.Windows"
         mc:Ignorable="d"
         Title="Capcha Window" Height="300" Width="250"
-        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         Background="AliceBlue">

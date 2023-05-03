@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace WpfApp.Models
 {
-    public partial class Item
+    public partial class Product
     {
+        public int ProductId { get; set; }
     }
 }

@@ -26,15 +26,7 @@ namespace WpfApp.Windows
 
         private void showItemsBtn_Click(object sender, RoutedEventArgs e)
         {
-            openWindow(new ItemsWindow());
-        }
-        private void openWindow(Window w)
-        {
-            this.Visibility = Visibility.Hidden;
-            w.Closed += (o, e) =>
-            {
-                this.Visibility = Visibility.Visible;
-            };
+            App.openWindow(this, new ProductsWindow(null));
         }
     }
 }
