@@ -138,7 +138,6 @@ namespace WpfApp.Windows
         }
         private Models.User? authUserRequest(string login, string password)
         {
-            var list = context.Users.ToList();
             Models.User? user = context.Users.FirstOrDefault(u => u.UserLogin == login);
             if (user == null)
                 return null;

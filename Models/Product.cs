@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace WpfApp.Models
 {
-    public partial class Product
+    public class Product
     {
         public int ProductId { get; set; }
         public string ProductArticleNumber { get; set; } = null!;
@@ -68,13 +68,6 @@ namespace WpfApp.Models
         public string? ProductPhoto { get; set; }
         [NotMapped]
         public string? ProductPhotoFromResources => "/Resources/" + ProductPhoto;
-
-
-        /// <summary>
-        /// Gets or sets the product category.
-        /// </summary>
-        /// <value>The product category.</value>
         public virtual ProductCategory ProductCategory { get; set; } = null!;
-
     }
 }
