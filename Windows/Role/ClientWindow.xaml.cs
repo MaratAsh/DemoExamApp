@@ -20,7 +20,7 @@ namespace WpfApp.Windows
     public partial class ClientWindow : Window
     {
         public Models.User? user { get; set; }
-
+        
         public ClientWindow(Models.User? user)
         {
             InitializeComponent();
