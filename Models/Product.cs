@@ -1,73 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace WpfApp.Models
+namespace WpfApp.Models;
+
+public partial class Product
 {
-    public class Product
+    public int ProductId { get; set; }
+
+    public string ProductArticleNumber { get; set; } = null!;
+
+    public string ProductName { get; set; } = null!;
+
+    public int UnitTypeId { get; set; }
+
+    public decimal ProductCost { get; set; }
+    [NotMapped]
+    public string ProductCostL
     {
-        public int ProductId { get; set; }
-        public string ProductArticleNumber { get; set; } = null!;
-
-        /// <summary>
-        /// Gets or sets the name of the product.
-        /// </summary>
-        /// <value>The name of the product.</value>
-        public string ProductName { get; set; } = null!;
-
-        /// <summary>
-        /// Gets or sets the unit type identifier.
-        /// </summary>
-        /// <value>The unit type identifier.</value>
-        public int UnitTypeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product cost.
-        /// </summary>
-        /// <value>The product cost.</value>
-        public decimal ProductCost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product maximum discount amount.
-        /// </summary>
-        /// <value>The product maximum discount amount.</value>
-        public byte? ProductMaxDiscountAmount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product manufacturer identifier.
-        /// </summary>
-        /// <value>The product manufacturer identifier.</value>
-        public int ProductManufacturerId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product supplier identifier.
-        /// </summary>
-        /// <value>The product supplier identifier.</value>
-        public int ProductSupplierId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product category identifier.
-        /// </summary>
-        /// <value>The product category identifier.</value>
-        public int ProductCategoryId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product discount amount.
-        /// </summary>
-        /// <value>The product discount amount.</value>
-        public byte? ProductDiscountAmount { get; set; }
-
-        [NotMapped]
-        public SolidColorBrush ColorProductDiscountAmount => ProductDiscountAmount > 15 ? new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#7fff00")) : new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0));
-        public int ProductQuantityInStock { get; set; }
-        public string ProductDescription { get; set; } = null!;
-        public string? ProductPhoto { get; set; }
-        [NotMapped]
-        public string? ProductPhotoFromResources => "/Resources/" + ProductPhoto;
-        public virtual ProductCategory ProductCategory { get; set; } = null!;
+        get
+        {
+            return Convert.ToInt32(ProductCost).ToString();
+        }
+        set
+        {
+            decimal cost = Convert.ToDecimal(value);
+            decimal coins = ProductCost * 10000 % 10000;
+            ProductCost = cost + coins / 10000;
+        }
     }
+    [NotMapped]
+    public string ProductCostR
+    {
+        get
+        {
+            return Convert.ToInt32(ProductCost * 10000 % 10000).ToString();
+        }
+        set
+        {
+            decimal coins = Convert.ToDecimal(value);
+            decimal cost = Convert.ToInt32(ProductCost);
+            ProductCost = cost + coins / 10000;
+        }
+    }
+
+
+    public byte? ProductMaxDiscountAmount { get; set; }
+
+    public int ProductManufacturerId { get; set; }
+
+    public int ProductSupplierId { get; set; }
+
+    public int ProductCategoryId { get; set; }
+
+    public byte? ProductDiscountAmount { get; set; }
+
+    public int ProductQuantityInStock { get; set; }
+
+    public string ProductDescription { get; set; } = null!;
+
+    public string? ProductPhoto { get; set; }
+
+    public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
+
+    public virtual ProductCategory ProductCategory { get; set; } = null!;
+
+    public virtual ProductManufacturer ProductManufacturer { get; set; } = null!;
+
+    public virtual ProductSupplier ProductSupplier { get; set; } = null!;
+
+    public virtual UnitType UnitType { get; set; } = null!;
+
+    [NotMapped]
+    public SolidColorBrush ColorProductDiscountAmount => ProductDiscountAmount > 15 ? new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#7fff00")) : new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0));
+    [NotMapped]
+    public string? ProductPhotoFromResources => "/Resources/" + ProductPhoto;
 }

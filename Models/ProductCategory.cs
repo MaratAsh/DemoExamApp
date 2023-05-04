@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WpfApp.Models
+namespace WpfApp.Models;
+
+public partial class ProductCategory
 {
-    public class ProductCategory
-    {
-        public int ProductCategoryId { get; set; }
-        public string ProductCategoryName { get; set; } = null!;
-        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-    }
+    public int ProductCategoryId { get; set; }
+
+    public string ProductCategoryName { get; set; } = null!;
+
+    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }
