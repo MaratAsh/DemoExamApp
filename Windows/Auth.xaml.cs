@@ -23,18 +23,17 @@ namespace WpfApp.Windows
     {
         int failed;
         DateTime lockedUntil;
-        Context context;
+        Models.User25Context context;
         
         public Auth()
         {
             InitializeComponent();
             passwordInputShow();
             failed = 0;
-            context = new Context();
+            context = new Models.User25Context();
             context.Roles.Load();
             context.Users.Load();
         }
-
         private void passwordTB_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (passwordTB.Visibility != Visibility.Visible)
