@@ -19,6 +19,10 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="16"/>
         </Style>
+        <Style x:Key="eventBtn" TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="0 10 0 10"/>
+        </Style>
     </Window.Resources>
     <Grid Style="{StaticResource MainStyle}">
         <Grid.RowDefinitions>
@@ -61,19 +65,19 @@
             <TextBlock
                 Style="{StaticResource title}"
                 Grid.Row="2">Фильтр цен:</TextBlock>
-            <ListBox
+            <ComboBox
                 Grid.Row="2" Grid.Column="1"
-                Name="filterListBox"
-                SelectionChanged="filterListBox_SelectionChanged"
-                ItemsSource="{Binding filterSales}"></ListBox>
+                Name="filterComboBox"
+                SelectionChanged="filterComboBox_SelectionChanged"
+                ItemsSource="{Binding filterSales}"></ComboBox>
             <TextBlock
                 Style="{StaticResource title}"
                 Grid.Row="2" Grid.Column="2">Сортировка:</TextBlock>
-            <ListBox
+            <ComboBox
                 Grid.Row="2" Grid.Column="3"
-                Name="sortListBox"
-                SelectionChanged="sortListBox_SelectionChanged"
-                ItemsSource="{Binding sortTypes}"></ListBox>
+                Name="sortComboBox"
+                SelectionChanged="sortComboBox_SelectionChanged"
+                ItemsSource="{Binding sortTypes}"></ComboBox>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         Grid.Row="3" Grid.Column="4"
@@ -89,42 +93,89 @@
             </StackPanel>
         </Grid>
         
-        <ListView
+        <ItemsControl
             Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"
-            x:Name="ListProducts"
+            x:Name="productsContainer"
+            ItemsSource="{Binding products}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
             >
-            <ListView.ItemsPanel>
+            <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel ItemWidth="400" ItemHeight="200"/>
+                    <WrapPanel ItemWidth="500" MinWidth="400" ItemHeight="200"/>
                 </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderThickness="1" BorderBrush="Black">
-                        <Grid Width="400" Height="200" Background="{Binding ColorProductDiscountAmount}">
+                    <Border
+                        BorderThickness="1"
+                        BorderBrush="Black"
+                        CornerRadius="5 15 5 15">
+                        <Grid 
+                            Height="200"
+                            Background="{Binding ColorProductDiscountAmount}">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="0.15*"/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition Height="0.15*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="3*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="0.25*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="0.25*"/>
                             </Grid.ColumnDefinitions>
-                            <Image Grid.Row="0" Grid.RowSpan="4" Grid.Column="0" Source="{Binding ProductPhotoFromResources, FallbackValue={StaticResource NullImage}}" HorizontalAlignment="Center" VerticalAlignment="Center"></Image>
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ProductName}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ProductDescription}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ProductManufacturer.ProductManufacturerName}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ProductCost}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                            <TextBlock Grid.Row="0" Grid.RowSpan="4" Grid.Column="3" Text="{Binding ProductDiscountAmount}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                            <Image
+                                Grid.Row="1" Grid.Column="1" Grid.RowSpan="4"
+                                Source="{Binding ProductPhotoFromResources, FallbackValue={StaticResource NullImage}}"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            </Image>
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="2"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                FontWeight="Bold"
+                                Text="{Binding ProductName}"></TextBlock>
+                            <TextBlock
+                                Grid.Row="2" Grid.Column="2"
+                                VerticalAlignment="Center" HorizontalAlignment="Left"
+                                Text="{Binding ProductDescription}"></TextBlock>
+                            <TextBlock
+                                Grid.Row="3" Grid.Column="2"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Text="{Binding ProductManufacturer.ProductManufacturerName}"></TextBlock>
+                            <TextBlock
+                                Grid.Row="4" Grid.Column="2"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Text="{Binding ProductCost}"></TextBlock>
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="4" Grid.RowSpan="4"
+                                Text="{Binding ProductDiscountAmount}"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                            <StackPanel
+                                Grid.Row="1" Grid.Column="5"
+                                VerticalAlignment="Center">
+                                <Button
+                                    x:Name="deleteProductButton"
+                                    Style="{StaticResource eventBtn}"
+                                    Click="deleteProductButton_Click">Удалить</Button>
+                                <Button
+                                    x:Name="editProductButton"
+                                    Style="{StaticResource eventBtn}"
+                                    Click="editProductButton_Click">Изменить</Button>
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </Grid>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button
+            Grid.Column="2" Grid.Row="2"
+            x:Name="addProductButton"
+            Click="addProductButton_Click">Добавить</Button>
+    </Grid> 
 </Window>

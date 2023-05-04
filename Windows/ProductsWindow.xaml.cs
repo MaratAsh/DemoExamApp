@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfApp.Models;
 
 namespace WpfApp.Windows
 {
@@ -21,7 +22,7 @@ namespace WpfApp.Windows
     public partial class ProductsWindow : Window
     {
         Models.User? user;
-        Context context;
+        User25Context context;
         public List<string> filterSales { get; set; }
         public List<string> sortTypes { get; set; }
         public List<Models.Product> products { get; set; }
@@ -30,9 +31,8 @@ namespace WpfApp.Windows
             InitializeComponent();
             DataContext = this;
             this.user = user;
-            context = new Context();
+            context = new User25Context();
             context.Products.Load();
-            products = context.Products.ToList();
             filterSales = new List<string>();
             filterSales.Add("Все диапазоны");
             filterSales.Add("0-9,99%");
@@ -44,13 +44,13 @@ namespace WpfApp.Windows
             sortTypes.Add("Сортировка по убыванию");
             productCalculation();
         }
-
-        private void filterListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        
+        private void filterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             productCalculation();
         }
 
-        private void sortListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void sortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             productCalculation();
         }
@@ -72,31 +72,67 @@ namespace WpfApp.Windows
             if (searchQueryBox.Text != "")
             {
                 p = p.Where(prod => prod.ProductName.StartsWith(searchQueryBox.Text)
-                                    || prod.ProductName.EndsWith(searchQueryBox.Text));
+                                    || prod.ProductName.EndsWith(searchQueryBox.Text)
+                                    || prod.ProductName.Contains(searchQueryBox.Text));
             }
 
-            if (sortListBox.SelectedItem as string == "Сортировка по возрастанию")
+            if (sortComboBox.SelectedItem as string == "Сортировка по возрастанию")
             {
                 p = p.OrderBy(prod => prod.ProductMaxDiscountAmount);
             }
-            else if (sortListBox.SelectedItem as string == "Сортировка по убыванию")
+            else if (sortComboBox.SelectedItem as string == "Сортировка по убыванию")
             {
                 p = p.OrderByDescending(prod => prod.ProductMaxDiscountAmount);
             }
 
-            if (filterListBox.SelectedItem as string == "0-9,99%")
+            if (filterComboBox.SelectedItem as string == "0-9,99%")
             {
                 p = p.Where(prod => prod.ProductMaxDiscountAmount < 10);
             }
-            else if (filterListBox.SelectedItem as string == "10-14,99%")
+            else if (filterComboBox.SelectedItem as string == "10-14,99%")
             {
                 p = p.Where(prod => prod.ProductMaxDiscountAmount < 15);
             }
-            else if (filterListBox.SelectedItem as string == "15% и более")
+            else if (filterComboBox.SelectedItem as string == "15% и более")
             {
                 p = p.Where(prod => prod.ProductMaxDiscountAmount >= 15);
             }
             products = p.ToList();
+            currentCountBox.Text = products.Count().ToString();
+            fullCountBox.Text = context.Products.Count().ToString();
+            productsContainer.ItemsSource = products;
+        }
+
+        private void deleteProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button).DataContext is not Models.Product product){
+                return;
+            }
+            MessageBox.Show($"Delete {product.ProductName}");
+        }
+
+        private void editProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button).DataContext is not Models.Product product)
+            {
+                return;
+            }
+            App.openWindow(this, new Editor.ProductEditorWindow(product, (editedProduct) =>
+            {
+                context.SaveChanges();
+                productCalculation();
+            }).setUnits(context.UnitTypes.ToList())
+                .setManufacturers(context.ProductManufacturers.ToList()));
+        }
+        private void addProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.openWindow(this, new Editor.ProductEditorWindow((product) =>
+            {
+                context.Products.Add(product);
+                context.SaveChanges();
+                productCalculation();
+            }).setUnits(context.UnitTypes.ToList())
+                .setManufacturers(context.ProductManufacturers.ToList()));
         }
     }
 }
