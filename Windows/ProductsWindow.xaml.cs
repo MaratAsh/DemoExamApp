@@ -186,8 +186,11 @@ namespace WpfApp.Windows
                 orderPanel.Visibility = Visibility.Visible;
                 order = new Order()
                 {
-                    OrderId = context.Orders.Max(order => order.OrderId) + 1,
-                    OrderStatus = context.OrderStatuses.First()
+                    OrderStatus = context.OrderStatuses.First(),
+                    UserId = (user == null ? null : user.UserId),
+                    OrderCreateDate = DateTime.Now,
+                    OrderDeliveryDate = new DateTime(1970, 1, 1),
+                    PickupPoint = context.PickupPoints.First()
                 };
                 orderProducts = new List<OrderProduct>();
                 context.Orders.Add(order);
