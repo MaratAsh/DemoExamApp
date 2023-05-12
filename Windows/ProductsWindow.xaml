@@ -92,6 +92,20 @@
                     Style="{StaticResource countingBlocks}"></TextBlock>
             </StackPanel>
         </Grid>
+        <StackPanel
+            x:Name="orderPanel"
+            Grid.Column="2">
+            <TextBlock TextWrapping="Wrap">Количество товаров в заказе</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding orderProducts.Count}"></TextBlock>
+                <TextBlock>шт.</TextBlock>
+            </StackPanel>
+            <Button
+                x:Name="showOrderBtn"
+                Click="showOrderBtn_Click">
+                Посмотреть
+            </Button>
+        </StackPanel>
         <ScrollViewer
             Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"
             VerticalScrollBarVisibility="Visible"

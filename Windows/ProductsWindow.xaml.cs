@@ -28,6 +28,10 @@ namespace WpfApp.Windows
         public List<string> filterSales { get; set; }
         public List<string> sortTypes { get; set; }
         public List<Models.Product> products { get; set; }
+        public Models.Order order { get; set; }
+        public List<Models.OrderProduct> orderProducts { get; set; }
+        public int orderItemsCount { get; set; }
+
         public ProductsWindow(Models.User? user)
         {
             InitializeComponent();
@@ -45,6 +49,8 @@ namespace WpfApp.Windows
             sortTypes.Add("Сортировка по возрастанию");
             sortTypes.Add("Сортировка по убыванию");
             productCalculation();
+            orderItemsCount = 0;
+            orderPanel.Visibility = Visibility.Hidden;
         }
         
         private void filterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -175,7 +181,34 @@ namespace WpfApp.Windows
         private void MenuItem_OrderAdd_Click(object sender, RoutedEventArgs e)
         {
             var product = (sender as MenuItem).DataContext as Models.Product;
+            if (orderItemsCount <= 0)
+            {
+                orderPanel.Visibility = Visibility.Visible;
+                order = new Order();
+                orderProducts = new List<OrderProduct>();
+                orderItemsCount = 0;
+            }
+            OrderProduct? orderProduct = orderProducts.Find((orderProduct) => {
+                if (orderProduct == null) return false;
+                return orderProduct.Product == product;
+            });
+            if (orderProduct != null)
+                return;
+            orderProduct = new OrderProduct()
+            {
+                Order = order,
+                Product = product,
+                Count = 1
+            };
+            orderProducts.Add(orderProduct);
+            orderItemsCount = orderProducts.Count;
 
+        }
+
+        private void showOrderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (order == null)
+                return;
         }
     }
 }
