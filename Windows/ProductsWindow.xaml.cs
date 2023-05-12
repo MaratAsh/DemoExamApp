@@ -179,17 +179,21 @@ namespace WpfApp.Windows
 
         private void MenuItem_OrderAdd_Click(object sender, RoutedEventArgs e)
         {
-            var product = (sender as MenuItem).DataContext as Models.Product;
+            MenuItem mi = sender as MenuItem;
+            var product = mi.DataContext as Models.Product;
             if (orderProducts == null || order == null)
             {
                 orderPanel.Visibility = Visibility.Visible;
-
                 order = new Order()
                 {
+                    OrderId = context.Orders.Max(order => order.OrderId) + 1,
                     OrderStatus = context.OrderStatuses.First()
                 };
                 orderProducts = new List<OrderProduct>();
+                context.Orders.Add(order);
+                context.SaveChanges();
             }
+            mi.Visibility = Visibility.Hidden;
             OrderProduct? orderProduct = orderProducts.Find((orderProduct) => {
                 if (orderProduct == null) return false;
                 return orderProduct.Product == product;
@@ -203,7 +207,7 @@ namespace WpfApp.Windows
                 Count = 1
             };
             orderProducts.Add(orderProduct);
-
+            context.SaveChanges();
         }
 
         private void showOrderBtn_Click(object sender, RoutedEventArgs e)
