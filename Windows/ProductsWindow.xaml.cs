@@ -30,7 +30,7 @@ namespace WpfApp.Windows
         public List<Models.Product> products { get; set; }
         public Models.Order order { get; set; }
         public List<Models.OrderProduct> orderProducts { get; set; }
-        public int orderItemsCount { get; set; }
+        
 
         public ProductsWindow(Models.User? user)
         {
@@ -49,7 +49,6 @@ namespace WpfApp.Windows
             sortTypes.Add("Сортировка по возрастанию");
             sortTypes.Add("Сортировка по убыванию");
             productCalculation();
-            orderItemsCount = 0;
             orderPanel.Visibility = Visibility.Hidden;
         }
         
@@ -181,12 +180,15 @@ namespace WpfApp.Windows
         private void MenuItem_OrderAdd_Click(object sender, RoutedEventArgs e)
         {
             var product = (sender as MenuItem).DataContext as Models.Product;
-            if (orderItemsCount <= 0)
+            if (orderProducts == null || order == null)
             {
                 orderPanel.Visibility = Visibility.Visible;
-                order = new Order();
+
+                order = new Order()
+                {
+                    OrderStatus = context.OrderStatuses.First()
+                };
                 orderProducts = new List<OrderProduct>();
-                orderItemsCount = 0;
             }
             OrderProduct? orderProduct = orderProducts.Find((orderProduct) => {
                 if (orderProduct == null) return false;
@@ -201,7 +203,6 @@ namespace WpfApp.Windows
                 Count = 1
             };
             orderProducts.Add(orderProduct);
-            orderItemsCount = orderProducts.Count;
 
         }
 
