@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -129,10 +131,51 @@ namespace WpfApp.Windows
             App.openWindow(this, new Editor.ProductEditorWindow((product) =>
             {
                 context.Products.Add(product);
-                context.SaveChanges();
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (DbEntityValidationException e)
+                {
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+                        Debug.WriteLine(@"Entity of type ""{0}"" in state ""{1}"" 
+                   has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name,
+                            eve.Entry.State);
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                            Debug.WriteLine(@"- Property: ""{0}"", Error: ""{1}""",
+                                ve.PropertyName, ve.ErrorMessage);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
                 productCalculation();
             }).setUnits(context.UnitTypes.ToList())
                 .setManufacturers(context.ProductManufacturers.ToList()));
+        }
+
+        private void Grid_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var product = (sender as Grid).DataContext as Models.Product;
+
+        }
+
+        private void productContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            var editMI = new MenuItem();
+            editMI.Header = "Изменить";
+            (sender as ContextMenu).Items.Add(editMI);
+        }
+
+        private void MenuItem_OrderAdd_Click(object sender, RoutedEventArgs e)
+        {
+            var product = (sender as MenuItem).DataContext as Models.Product;
+
         }
     }
 }
