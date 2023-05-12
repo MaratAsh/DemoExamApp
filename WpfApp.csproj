@@ -8,6 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\B538G6.jpg" />
+    <None Remove="Resources\D648N7.jpg" />
+    <None Remove="Resources\D830R5.jpg" />
+    <None Remove="Resources\E324U7.jpg" />
+    <None Remove="Resources\F735B6.jpg" />
+    <None Remove="Resources\F746E6.jpg" />
+    <None Remove="Resources\F937G4.jpg" />
+    <None Remove="Resources\G403T5.jpg" />
+    <None Remove="Resources\G598Y6.jpg" />
+    <None Remove="Resources\picture.png" />
+    <None Remove="Resources\А112Т4.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EasyCaptcha.Wpf" Version="0.9.0.3" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
@@ -34,6 +48,20 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\B538G6.jpg" />
+    <Resource Include="Resources\D648N7.jpg" />
+    <Resource Include="Resources\D830R5.jpg" />
+    <Resource Include="Resources\E324U7.jpg" />
+    <Resource Include="Resources\F735B6.jpg" />
+    <Resource Include="Resources\F746E6.jpg" />
+    <Resource Include="Resources\F937G4.jpg" />
+    <Resource Include="Resources\G403T5.jpg" />
+    <Resource Include="Resources\G598Y6.jpg" />
+    <Resource Include="Resources\picture.png" />
+    <Resource Include="Resources\А112Т4.jpg" />
   </ItemGroup>
 
 </Project>
