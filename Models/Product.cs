@@ -35,7 +35,11 @@ public partial class Product
     {
         get
         {
-            return Convert.ToInt32(ProductCost * 10000 % 10000).ToString();
+            var coins = Convert.ToInt32(ProductCost * 10000 % 10000);
+            var coinsString = coins.ToString();
+            while (coinsString.Length < 4)
+                coinsString = "0" + coinsString;
+            return coinsString;
         }
         set
         {
