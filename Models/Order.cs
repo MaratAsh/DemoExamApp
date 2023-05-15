@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WpfApp.Models;
 
@@ -26,4 +27,14 @@ public partial class Order
     public virtual PickupPoint PickupPoint { get; set; } = null!;
 
     public virtual User? User { get; set; }
+
+    public decimal CalculateCost()
+    {
+        decimal cost = 0;
+        foreach (var product in OrderProducts)
+            cost += product.Cost;
+        return cost;
+    }
+    [NotMapped]
+    public decimal Cost => CalculateCost();
 }
