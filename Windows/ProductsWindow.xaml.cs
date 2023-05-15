@@ -23,7 +23,7 @@ namespace WpfApp.Windows
     /// </summary>
     public partial class ProductsWindow : Window
     {
-        Models.User? user;
+        public Models.User? user { get; set; }
         User25Context context;
         public List<string> filterSales { get; set; }
         public List<string> sortTypes { get; set; }
@@ -50,7 +50,7 @@ namespace WpfApp.Windows
             sortTypes.Add("Сортировка по убыванию");
             productCalculation();
             orderPanel.Visibility = Visibility.Hidden;
-            userPanel.Text = user == null ? "Гость" : $"{user.UserSurname} {user.UserSurname} {user.UserPatronymic}";
+            //userPanel.Text = user == null ? "Гость" : $"{user.UserSurname} {user.UserName} {user.UserPatronymic}";
         }
         
         private void filterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -173,9 +173,7 @@ namespace WpfApp.Windows
 
         private void productContextMenu_Opened(object sender, RoutedEventArgs e)
         {
-            var editMI = new MenuItem();
-            editMI.Header = "Изменить";
-            (sender as ContextMenu).Items.Add(editMI);
+
         }
 
         private void MenuItem_OrderAdd_Click(object sender, RoutedEventArgs e)

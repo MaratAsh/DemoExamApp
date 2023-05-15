@@ -25,6 +25,22 @@
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Margin" Value="0 10 0 10"/>
         </Style>
+        <Style x:Key="administrationElements" TargetType="FrameworkElement">
+            <Style.Setters>
+                
+            </Style.Setters>
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding user}" Value="{x:Null}"/>
+                        <Condition Binding="{Binding user}" Value="{x:Null}"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid Style="{StaticResource MainStyle}">
         <Grid.RowDefinitions>
@@ -37,12 +53,17 @@
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock
+        <StackPanel
             x:Name="userPanel"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="1"
             Margin="10 10 0 0">
-            ФИО
-        </TextBlock>
+            <TextBlock Text="{Binding user.Role.RoleName, FallbackValue=Гость}" FontWeight="Bold"></TextBlock>
+            <WrapPanel>
+                <TextBlock Text="{Binding user.UserSurname}" Margin="0 0 2 0"></TextBlock>
+                <TextBlock Text="{Binding user.UserName}" Width="8" Margin="0 0 2 0"></TextBlock>
+                <TextBlock Text="{Binding user.UserPatronymic}" Width="8" Margin="0 0 2 0"></TextBlock>
+            </WrapPanel>
+        </StackPanel>
 
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
@@ -139,14 +160,13 @@
                             Margin="0 0 0 25">
                             <Grid
                                 Height="200"
-                                Background="{Binding ColorProductDiscountAmount}"
                                 UIElement.PreviewMouseRightButtonDown="Grid_PreviewMouseRightButtonDown"
                                 >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="0.15*"/>
                                     <RowDefinition Height="65"/>
                                     <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="50"/>
                                     <RowDefinition/>
                                     <RowDefinition Height="0.15*"/>
                                 </Grid.RowDefinitions>
@@ -162,10 +182,18 @@
                                     <ContextMenu x:Name="productContextMenu" Opened="productContextMenu_Opened">
                                         <MenuItem Header="Добавить к заказу"
                                                   Click="MenuItem_OrderAdd_Click"/>
+                                        <MenuItem
+                                            x:Name="menuItemEdit"
+                                            Style="{StaticResource administrationElements}"
+                                            Header="Изменить"/>
+                                        <MenuItem
+                                            x:Name="menuItemDelete"
+                                            Style="{StaticResource administrationElements}"
+                                            Header="Удалить"/>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                                 <Image
-                                    Grid.Row="0" Grid.Column="0" Grid.RowSpan="5"
+                                    Grid.Row="1" Grid.Column="0" Grid.RowSpan="4"
                                     Source="{Binding ProductPhotoFromResources, FallbackValue={StaticResource NullImage}}"
                                     HorizontalAlignment="Center" VerticalAlignment="Center"
                                     >
@@ -229,10 +257,10 @@
                                             VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
                                     </StackPanel>
                                 </Grid>
-                                
                                 <StackPanel
                                     Grid.Row="1" Grid.Column="5"
-                                    VerticalAlignment="Center">
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource administrationElements}">
                                     <Button
                                         x:Name="deleteProductButton"
                                         Click="deleteProductButton_Click">Удалить</Button>
@@ -249,6 +277,7 @@
         <Button
             Grid.Column="2" Grid.Row="2"
             x:Name="addProductButton"
+            Style="{StaticResource administrationElements}"
             Click="addProductButton_Click">Добавить</Button>
     </Grid> 
 </Window>
