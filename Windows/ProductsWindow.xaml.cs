@@ -50,7 +50,6 @@ namespace WpfApp.Windows
             sortTypes.Add("Сортировка по убыванию");
             productCalculation();
             orderPanel.Visibility = Visibility.Hidden;
-            //userPanel.Text = user == null ? "Гость" : $"{user.UserSurname} {user.UserName} {user.UserPatronymic}";
         }
         
         private void filterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
