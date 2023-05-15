@@ -30,7 +30,9 @@ namespace WpfApp.Windows
         public List<Models.Product> products { get; set; }
         public Models.Order order { get; set; }
         public List<Models.OrderProduct> orderProducts { get; set; }
-        
+        public int orderProductsCount => orderProducts.Count;
+
+
 
         public ProductsWindow(Models.User? user)
         {
@@ -208,6 +210,7 @@ namespace WpfApp.Windows
                 Count = 1
             };
             orderProducts.Add(orderProduct);
+            order.OrderProducts.Add(orderProduct);
             context.SaveChanges();
         }
 
@@ -215,6 +218,13 @@ namespace WpfApp.Windows
         {
             if (order == null)
                 return;
+            new Editor.OrderEditorWindow(user, order, orderProducts)
+                .setStatuses(context.OrderStatuses.ToList())
+                .setPickupPoints(context.PickupPoints.ToList())
+                .setAction((order) =>
+                {
+                    context.SaveChanges();
+                }).ShowDialog();
         }
     }
 }

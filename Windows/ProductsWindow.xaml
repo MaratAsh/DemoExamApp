@@ -11,9 +11,6 @@
         MinHeight="450" MinWidth="800"
         x:Name="myWindow">
     <Window.Resources>
-        <system:String x:Key="NullImage">
-            pack://application:,,,/Resources/picture.png
-        </system:String>
         <Style x:Key="countingBlocks" TargetType="TextBlock">
             <Setter Property="Margin" Value="5 0 0 0"/>
         </Style>
