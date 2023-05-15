@@ -13,13 +13,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WpfApp.Models;
+using Microsoft.Office.Interop;
+using Microsoft.Office.Interop.Word;
+using Microsoft.Win32;
+using System.IO;
 
 namespace WpfApp.Windows.Editor
 {
     /// <summary>
     /// Логика взаимодействия для OrderEditorWindow.xaml
     /// </summary>
-    public partial class OrderEditorWindow : Window
+    public partial class OrderEditorWindow : System.Windows.Window
     {
         public List<OrderStatus> statuses { get; set; }
         public List<PickupPoint> pickupPoints { get; set; }
@@ -107,7 +111,52 @@ namespace WpfApp.Windows.Editor
 
         private void pdfCreatorButton_Click(object sender, RoutedEventArgs e)
         {
+            var app = new Microsoft.Office.Interop.Word.Application();
+            Document document = app.Documents.Add();
+            var header = document.Paragraphs.Add();
+            header.Range.Text = $"Заказ №{order.OrderId}";
+            header.Range.InsertParagraphAfter();
+            var date = document.Paragraphs.Add();
+            date.Range.Text = $"От {order.OrderCreateDate}";
+            date.Range.InsertParagraphAfter();
+            var recieve = document.Paragraphs.Add();
+            recieve.Range.Text = $"Для получения заказа вы выбрали: {order.PickupPoint.Address}";
+            recieve.Range.InsertParagraphAfter();
+            var code = document.Paragraphs.Add();
+            code.Range.Text = "Код для получения: ";
+            code.Range.Font.Size = 16;
+            code.Range.Font.BoldBi = 1;
+            code.Range.InsertAfter(order.OrderGetCode.ToString());
+            code.Range.Font.BoldBi = 0;
+            code.Range.InsertParagraphAfter();
+            var products = document.Paragraphs.Add();
+            var range = products.Range;
+            range.InsertParagraphAfter();
 
+            var table = document.Tables.Add(range, order.OrderProducts.Count + 1, 5);
+            table.Borders.InsideLineStyle = WdLineStyle.wdLineStyleSingle;
+            table.Borders.OutsideLineStyle = WdLineStyle.wdLineStyleSingle;
+            Row row = table.Rows[1];
+            row.Cells[1].Range.Text = "Номер";
+            row.Cells[2].Range.Text = "Название";
+            row.Cells[3].Range.Text = "Цена за единицу";
+            row.Cells[4].Range.Text = "Количество";
+            row.Cells[5].Range.Text = "Цена";
+            var list = order.OrderProducts.ToList();
+            for (int i = 0; i < order.OrderProducts.Count(); i++)
+            {
+                row = table.Rows[i + 2];
+                row.Cells[1].Range.Text = (i + 1).ToString();
+                row.Cells[2].Range.Text = list[i].Product.ProductName.ToString();
+                row.Cells[3].Range.Text = list[i].Product.ProductCost.ToString();
+                row.Cells[4].Range.Text = list[i].Count.ToString();
+                row.Cells[5].Range.Text = list[i].Cost.ToString();
+            }
+            var result = document.Paragraphs.Add();
+            result.Range.Text = $"Итого: {order.Cost}";
+            result.Range.InsertParagraphAfter();
+            app.Visible = false;
+            document.SaveAs2($"Заказ-{order.OrderId}-{DateTime.Now.Millisecond}.pdf", WdExportFormat.wdExportFormatPDF);
         }
     }
 }
